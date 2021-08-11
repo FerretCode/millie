@@ -1,58 +1,83 @@
 let http = require("http");
 let crypto = require("crypto");
 
+let millie_response = require("./classes/res");
+
 class millie {
-  constructor(port, options) {
-    this.options = options || {};
+    constructor(port, options) {
+        this.options = options || {};
 
-    this.initialize = () => {
-      if (!parseInt(port))
-        return console.error("Port needs to be a valid number!");
+        this.initialize = () => {
+            if (!parseInt(port))
+                return console.error("Port needs to be a valid number!");
 
-      this.server = http.createServer();
+            this.server = http.createServer();
 
-      this.server.listen(port || 3000);
+            console.log("Running setup...");
 
-      console.log(`Now listening on port ${port || 3000}`);
+            try {
+                millie_response.millie_res_generator.generate();
+            } catch(e) {
+                throw console.error(
+                    `An error occurred while adding custom functions to http.ServerResponse! Error: `,
+                    e
+                )
+            }
 
-      return this.server;
-    };
+            this.server.listen(port || 3000);
 
-    this.auth = (input, token) => {
-      if (!(typeof input === "string") || !(typeof token === "string"))
-        return console.error("Input and token must be strings!");
+            console.log(`Now listening on port ${port || 3000}`);
 
-      let input_buf = Buffer.from(input);
-      let token_buf = Buffer.from(token);
+            return this.server;
+        };
 
-      return crypto.timingSafeEqual(input_buf, token_buf);
-    };
+        this.auth = (input, token) => {
+            if (!(typeof input === "string") || !(typeof token === "string"))
+                return console.error("Input and token must be strings!");
 
-    this.request = (route, callback) => {
-      this.server.on("request", (req, res) => {
-        let url = route;
+            let input_buf = Buffer.alloc(Buffer.byteLength(input), 0, "utf-8");
+            input_buf.write(input);
 
-        if (!url.startsWith("/")) url = "/" + url;
+            let token_buf = Buffer.alloc(Buffer.byteLength(token), 0, "utf-8");
+            token_buf.write(token);
 
-        if (req.url !== url) return;
+            if (Buffer.byteLength(input) !== Buffer.byteLength(token))
+                return false;
 
-        if (this.options.hasOwnProperty("auth_secret"))
-          if (!req.headers["Authorization"]) {
-            res.writeHead(401, "Unauthorized! No credentials provided!").end();
-          } else if (
-            !this.auth(req.headers["Authorization"], this.options.auth_secret)
-          )
-            res.writeHead(401, "Unauthorized! Invalid credentials!").end();
+            return crypto.timingSafeEqual(input_buf, token_buf);
+        };
 
-        callback(req, res);
-      });
-    };
-  }
+        this.request = (route, callback) => {
+            this.server.on("request", (req, res) => {
+                let url = route;
+
+                if (!url.startsWith("/")) url = "/" + url;
+
+                if (req.url !== url) return;
+
+                if (this.options.hasOwnProperty("auth_secret"))
+                    if (!req.headers["authorization"]) {
+                        res.writeHead(
+                            401,
+                            "Unauthorized! No credentials provided!"
+                        ).end();
+                    } else if (
+                        !this.auth(
+                            req.headers["authorization"],
+                            this.options.auth_secret
+                        )
+                    )
+                        res.writeHead(
+                            401,
+                            "Unauthorized! Invalid credentials!"
+                        ).end();
+
+                callback(req, res);
+            });
+        };
+    }
 }
 
-let millieInstance = new millie(3005, { auth_secret: "gaming" });
-
-millieInstance.initialize();
-millieInstance.request("/", (req, res) => {
-  console.log(req);
-});
+module.exports = {
+    millie
+};
