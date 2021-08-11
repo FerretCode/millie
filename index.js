@@ -61,16 +61,16 @@ class millie {
                             401,
                             "Unauthorized! No credentials provided!"
                         ).end();
-                    } else if (
-                        !this.auth(
-                            req.headers["authorization"],
-                            this.options.auth_secret
-                        )
-                    )
+
+                        return;
+                    } else if (!this.auth(req.headers["authorization"], this.options.auth_secret)) {
                         res.writeHead(
                             401,
                             "Unauthorized! Invalid credentials!"
                         ).end();
+
+                        return;
+                    }
 
                 callback(req, res);
             });

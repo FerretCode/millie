@@ -20,11 +20,13 @@ Have a question? Join the discord!
 ## Basic Usage
 
 ```javascript
-let millie = require("millie");
+let millie = require("millie").millie;
 
 let app = new millie(3000, { 
     "auth_secret": "api token or password for auth (optional)"
 });
+
+app.initialize();
 
 app.request("/api", (req, res) => {
     res.status(200); //not really necessary unless you want to change the status code before responding
