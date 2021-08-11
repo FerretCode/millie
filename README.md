@@ -6,6 +6,7 @@ A small, zero dependency HTTP library for Node.JS
 Have a question? Join the discord!
 
 [![Discord Server](https://img.shields.io/badge/millie-https%3A%2F%2Fdiscord.gg%2FQGNGyF6j5q-blue?style=flat-square&logo=appveyor)](https://discord.gg/QGNGyF6j5q)
+[![NPM](https://nodei.co/npm/millie.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/millie/)
 
 
 ## Features 📜
