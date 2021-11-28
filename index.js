@@ -72,7 +72,7 @@ class millie {
     /**
      * A function that calls a callback when a request is sent
      * @param {string} route the route to listen for requests on
-     * @param {object} callback the function to be called when a request is found
+     * @param {function(http.ClientRequest, http.ServerResponse)} callback the callback to run
      */
     this.request = (route, callback) => {
       this.server.on("request", (req, res) => {
