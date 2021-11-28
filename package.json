@@ -1,6 +1,6 @@
 {
   "name": "millie",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "a small zero dependency http library named after my cat",
   "main": "index.js",
   "scripts": {
@@ -11,5 +11,10 @@
   "devDependencies": {
     "@types/node": "^16.4.13"
   },
-  "keywords": ["http", "small", "server", "api"]
+  "keywords": [
+    "http",
+    "small",
+    "server",
+    "api"
+  ]
 }
