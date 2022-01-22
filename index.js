@@ -104,4 +104,5 @@ class millie {
 
 module.exports = {
   millie,
+  MillieResponse
 };
