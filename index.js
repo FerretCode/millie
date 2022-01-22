@@ -2,6 +2,7 @@ let http = require("http");
 let crypto = require("crypto");
 
 let millie_response = require("./classes/res");
+let { MillieResponse } = require("./classes/MillieResponse");
 
 /**
  * The millie app class
@@ -19,7 +20,7 @@ class millie {
 
     /**
      * Starts server and generates custom response functions
-     * @returns {http.Server} an http server
+     * @returns {millie} an millie instance
      */
     this.initialize = () => {
       if (!parseInt(port))
@@ -45,7 +46,7 @@ class millie {
 
       console.log(`Now listening on port ${port || 3000}`);
 
-      return this.server;
+      return this;
     };
 
     /**
@@ -72,7 +73,7 @@ class millie {
     /**
      * A function that calls a callback when a request is sent
      * @param {string} route the route to listen for requests on
-     * @param {function(http.ClientRequest, http.ServerResponse)} callback the callback to run
+     * @param {function(http.ClientRequest, MillieResponse)} callback the callback to run
      */
     this.request = (route, callback) => {
       this.server.on("request", (req, res) => {
@@ -95,7 +96,7 @@ class millie {
             return;
           }
 
-        callback(req, res);
+        callback(new MillieResponse(req), res);
       });
     };
   }
