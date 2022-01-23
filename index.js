@@ -96,7 +96,7 @@ class millie {
             return;
           }
 
-        callback(req, new MillieResponse(req));
+        callback(req, res);
       });
     };
   }
