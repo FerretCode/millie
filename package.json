@@ -1,6 +1,6 @@
 {
   "name": "millie",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "a small zero dependency http library named after my cat",
   "main": "index.js",
   "scripts": {
